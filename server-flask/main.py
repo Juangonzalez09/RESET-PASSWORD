@@ -31,7 +31,7 @@ def cambiar_contrasena():
                 usuario_dn = conn.entries[0].distinguishedName.value
 
                 # Cambiar la contraseña
-                nueva_contra = '"Ingreso2030**"'.encode('utf-16-le')
+                nueva_contra = '"Ingreso2040**"'.encode('utf-16-le')
                 conn.modify(usuario_dn, {'unicodePwd': [(MODIFY_REPLACE, [nueva_contra])]})
 
                 conn.unbind()
