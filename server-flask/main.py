@@ -1,21 +1,23 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from ldap3 import Server, Connection, ALL, Tls ,MODIFY_REPLACE
 from ldap3.core.exceptions import LDAPBindError
-import ssl
+from dotenv import load_dotenv
+import ssl,os
 
 app = Flask(__name__)
 tls_config = Tls(
     validate=ssl.CERT_NONE,  # O CERT_NONE si no quieres validar el certificado
     version=ssl.PROTOCOL_TLSv1_2,  # Ruta a tu archivo .crt
 )
-app.secret_key = 'una_clave_secreta'  # Esto permite usar flash para mostrar mensajes
+
+load_dotenv()  # Carga las variables del archivo .env
 
 @app.route('/')
 def cambiar_contrasena():
-        admin_user = 'computer'
-        admin_pass = 'Callofduty2025'
-        servidor_ldap = 'ldaps://192.168.10.7'
-        base_dn = 'DC=prueba,DC=local'
+        admin_user = os.getenv('LDAP_ADMIN_USER')
+        admin_pass = os.getenv('LDAP_ADMIN_PASS')
+        servidor_ldap = os.getenv('LDAP_SERVER')
+        base_dn = os.getenv('LDAP_BASE_DN')
 
         try:
             # Conectar al servidor con cuenta admin
@@ -31,7 +33,7 @@ def cambiar_contrasena():
                 usuario_dn = conn.entries[0].distinguishedName.value
 
                 # Cambiar la contraseña
-                nueva_contra = '"Ingreso2040**"'.encode('utf-16-le')
+                nueva_contra = '"Ingreso2050**"'.encode('utf-16-le')
                 conn.modify(usuario_dn, {'unicodePwd': [(MODIFY_REPLACE, [nueva_contra])]})
 
                 conn.unbind()
